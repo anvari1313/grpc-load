@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 
@@ -19,5 +21,10 @@ func clientFunc(cmd *cobra.Command, args []string) {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync() // flushes buffer, if any
 
-	client.Init(":1213", ":1313", logger)
+	serverAddress, found := os.LookupEnv("GRPC_LOAD_SERVER_ADDRESS")
+	if !found {
+		serverAddress = "127.0.0.1:1313"
+	}
+
+	client.Init(":1213", serverAddress, logger)
 }

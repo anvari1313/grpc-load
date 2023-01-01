@@ -17,19 +17,23 @@ import (
 )
 
 func Init(bind, gRPCAddress string, logger *zap.Logger) {
+	logger.Info("dialing gRPC client", zap.String("server_address", gRPCAddress))
+
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithUnaryInterceptor(grpc_prometheus.UnaryClientInterceptor),
 	}
 	conn, err := grpc.Dial(gRPCAddress, opts...)
 	if err != nil {
-		panic(err)
+		logger.Fatal("error in dialing gRPC client", zap.Error(err))
 	}
 	defer conn.Close()
 
 	client := proto.NewGreeterClient(conn)
 
 	e := echo.New()
+	e.HideBanner = true
+	e.HidePort = true
 	p := prometheus.NewPrometheus("echo", nil)
 	p.Use(e)
 
@@ -47,6 +51,7 @@ func Init(bind, gRPCAddress string, logger *zap.Logger) {
 	e.GET("/", runAllMethodsSyncHandler(client))
 	e.GET("/batch", runBatchAsyncHandler(client, logger))
 
+	logger.Info("starting HTTP server", zap.String("bind", bind))
 	e.Logger.Fatal(e.Start(bind))
 }
 
