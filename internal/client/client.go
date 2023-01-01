@@ -22,6 +22,7 @@ func Init(bind, gRPCAddress string, logger *zap.Logger) {
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithUnaryInterceptor(grpc_prometheus.UnaryClientInterceptor),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 	}
 	conn, err := grpc.Dial(gRPCAddress, opts...)
 	if err != nil {

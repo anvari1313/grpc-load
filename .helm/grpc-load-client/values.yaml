@@ -86,4 +86,5 @@ monitoring:
   enabled: true
   interval: "10s"
 
-serverAddress: "127.0.0.1:1313"
+# serverAddress: "127.0.0.1:1313"
+serverAddress: "dns:///grpc-load-server-headless:80"

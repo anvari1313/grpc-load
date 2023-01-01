@@ -1,6 +1,6 @@
 module github.com/anvari1313/grpc-load
 
-go 1.19
+go 1.18
 
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
