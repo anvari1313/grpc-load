@@ -1,0 +1,16 @@
+{{ if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "grpc-load-server.fullname" . }}
+  labels:
+    {{- include "grpc-load-server.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - path: /metrics
+      interval: {{ .Values.monitoring.interval | quote }}
+      port: http
+  selector:
+    matchLabels:
+      {{- include "grpc-load-server.selectorLabels" . | nindent 6 }}
+{{- end }}
