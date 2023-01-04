@@ -9,7 +9,7 @@ image:
   repository: anvari1313/grpc-load
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "add-grpc-lb-headless-service"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -42,7 +42,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 1313
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -58,7 +58,7 @@ resources: {}
 
 autoscaling:
   enabled: true
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80

@@ -9,7 +9,7 @@ image:
   repository: anvari1313/grpc-load
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "add-grpc-lb-headless-service"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -40,6 +40,7 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 80
+  containerPort: 1213
 
 ingress:
   enabled: false
@@ -87,4 +88,5 @@ monitoring:
   interval: "10s"
 
 # serverAddress: "127.0.0.1:1313"
-serverAddress: "dns:///grpc-load-server-headless:80"
+serverAddress: "kubernetes:///grpc-load-server-headless:1313"
+# serverAddress: "dns:///grpc-load-server-headless:1313"

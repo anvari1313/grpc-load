@@ -9,9 +9,11 @@ import (
 	"github.com/labstack/echo-contrib/prometheus"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/sercand/kuberesolver/v3"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 
 	"github.com/anvari1313/grpc-load/proto"
 )
@@ -19,7 +21,9 @@ import (
 func Init(bind, gRPCAddress string, logger *zap.Logger) {
 	logger.Info("dialing gRPC client", zap.String("server_address", gRPCAddress))
 
+	kuberesolver.RegisterInCluster()
 	opts := []grpc.DialOption{
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithUnaryInterceptor(grpc_prometheus.UnaryClientInterceptor),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),

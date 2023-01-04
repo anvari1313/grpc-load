@@ -33,9 +33,13 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/usr/local/bin/grpc-load", "server"]
           ports:
             - name: http
               containerPort: 1212
+              protocol: TCP
+            - name: grpc
+              containerPort: 1313
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
